@@ -2,18 +2,35 @@
 
 <head>
   <script src="https://cdn.bootcss.com/socket.io/2.1.1/socket.io.dev.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/danmaku@1.3.5/dist/danmaku.min.js"></script>
 </head>
 
 <h1>slave</h1>
 
 <a id='shareRoomLink' href="/slave?roomId=4433">一起听课</a>
-
+<div id="my-container" style="width:640px;height:360px;"></div>
+<button id="send-button">发送</button>
 <script>
   const roomId = location.search.split('roomId=')[1];
   const shareRoomLink = document.querySelector('#shareRoomLink');
   shareRoomLink.href = "/slave?roomId=" + roomId;
-
   const socket = io.connect();
+  var danmaku = new Danmaku();
+  var btn = document.getElementById('send-button');
+  danmaku.init({
+    container: document.getElementById('my-container')
+  });
+  btn.addEventListener('click', function() {
+    var comment = {
+      text: 'bla bla',
+      style: {
+        fontSize: '20px',
+        color: '#000'
+      },
+    };
+    socket.emit('danmaku', comment);
+  });
+
   const login = () => {
     socket.emit('login', {
       userId: Math.random(),
@@ -22,6 +39,10 @@
       role: 'slave'
     });
   }
+  socket.on('danmaku', function(comment) {
+    console.log(comment);
+    danmaku.emit(comment)
+  });
   socket.on('operation', op => console.log(op));
   socket.on('login', console.log);
   socket.on('logout', console.log);
@@ -31,5 +52,4 @@
   });
 
 </script>
-
 </html>
