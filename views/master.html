@@ -17,6 +17,7 @@
 
 
   window.socket = io.connect('http://localhost:4836');
+  // window.socket = io.connect('http://enow-live.test.seewo.com');
   const login = () => {
     socket.emit('login', {
       userId: '1',
