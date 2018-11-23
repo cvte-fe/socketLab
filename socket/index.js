@@ -20,7 +20,10 @@ module.exports = http => {
     connection(socket)();
     //监听用户登录
     socket.on("login", login(socket));
-
+    socket.on("danmaku", comment => {
+      console.log("danmaku", comment);
+      socket.emit("danmaku", comment);
+    });
     //监听用户退出
     socket.on("disconnect", disconnect(socket));
     //监听用户发出操作
